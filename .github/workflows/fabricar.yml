@@ -1,0 +1,37 @@
+name: Fabricar los Reels
+
+# Se lanza a mano una sola vez (pestaña Actions → Fabricar los Reels → Run workflow).
+# Crea los vídeos de la carpeta posts/ y la lista cola.json a partir de fabrica/frases.py.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: escritura-repo
+  cancel-in-progress: false
+
+jobs:
+  fabricar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar herramientas
+        run: |
+          which ffmpeg || (sudo apt-get update && sudo apt-get install -y ffmpeg)
+          pip install --quiet pillow numpy
+
+      - name: Fabricar los Reels (unos 15 minutos)
+        run: cd fabrica && python3 construir.py
+
+      - name: Guardar los Reels
+        run: |
+          git config user.name "bot-publicador"
+          git config user.email "bot@users.noreply.github.com"
+          git add posts cola.json
+          git commit -m "Reels fabricados"
+          git pull --rebase
+          git push

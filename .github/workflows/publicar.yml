@@ -1,0 +1,45 @@
+name: Publicar en Instagram
+
+on:
+  schedule:
+    # 4 Reels al día. Horas en UTC = 8:07, 12:07, 17:07 y 21:07 hora del Centro de EE. UU. (verano, UTC-5).
+    # En invierno (desde el 1 de noviembre) todo sale una hora antes en hora local.
+    - cron: "7 13 * * *"
+    - cron: "7 17 * * *"
+    - cron: "7 22 * * *"
+    - cron: "7 2 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Prueba sin publicar (1 = sí, 0 = publicar de verdad)"
+        default: "1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: escritura-repo
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publicar el siguiente Reel
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || '0' }}
+        run: python3 publicar.py
+
+      - name: Guardar el estado de la cola
+        if: ${{ (github.event.inputs.dry_run || '0') != '1' }}
+        run: |
+          git config user.name "bot-publicador"
+          git config user.email "bot@users.noreply.github.com"
+          git add cola.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Publicado: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase
+          git push
