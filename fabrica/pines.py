@@ -93,7 +93,7 @@ def main():
             "Pinterest board": a.tablero,
             "Thumbnail": "",
             "Description": desc,
-            "Link": ENLACE,
+            "Link": f"{ENLACE}/ref=pin_{i + 1:04d}",   # enlace único por pin (Pinterest rechaza enlaces duplicados)
             "Publish date": f"{dia.date().isoformat()}T{hora}",
             "Keywords": claves,
         })
