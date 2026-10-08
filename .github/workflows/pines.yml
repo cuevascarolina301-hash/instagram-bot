@@ -1,0 +1,59 @@
+name: Fabricar los Pines de Pinterest
+
+# Se lanza a mano (pestaña Actions → Fabricar los Pines de Pinterest → Run workflow).
+# Crea las imágenes de pines/ y los ficheros pinterest_mes1.csv y pinterest_mes2.csv
+# (o pinterest_prueba.csv con 3 pines si se marca «prueba»).
+on:
+  workflow_dispatch:
+    inputs:
+      tablero:
+        description: "Nombre EXACTO del tablero de Pinterest"
+        default: "Frases de amor propio"
+        required: true
+      inicio:
+        description: "Primer día de publicación (AAAA-MM-DD). Vacío = mañana"
+        default: ""
+        required: false
+      prueba:
+        description: "Prueba con 3 pines"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: escritura-repo
+  cancel-in-progress: false
+
+jobs:
+  pines:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar herramientas
+        run: pip install --quiet pillow numpy
+
+      - name: Fabricar los pines
+        env:
+          TABLERO: ${{ inputs.tablero }}
+          INICIO: ${{ inputs.inicio }}
+          PRUEBA: ${{ inputs.prueba }}
+        run: |
+          OWNER=$(echo "${GITHUB_REPOSITORY%%/*}" | tr '[:upper:]' '[:lower:]')
+          BASE="https://${OWNER}.github.io/${GITHUB_REPOSITORY#*/}"
+          ARGS=(--tablero "$TABLERO" --base "$BASE")
+          [ -n "$INICIO" ] && ARGS+=(--inicio "$INICIO")
+          [ "$PRUEBA" = "true" ] && ARGS+=(--prueba)
+          cd fabrica && python3 pines.py "${ARGS[@]}"
+
+      - name: Guardar
+        run: |
+          git config user.name "bot-publicador"
+          git config user.email "bot@users.noreply.github.com"
+          git add pines pinterest_*.csv
+          git commit -m "Pines de Pinterest" || exit 0
+          git pull --rebase
+          git push
