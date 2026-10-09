@@ -2,7 +2,7 @@ name: Publicar en Instagram
 
 on:
   schedule:
-    # 4 Reels al día. Horas en UTC = 8:07, 12:07, 17:07 y 21:07 hora del Centro de EE. UU. (verano, UTC-5).
+    # 4 Reels al día. Horas en UTC = 8:03, 12:08, 16:07 y 19:10 hora del Centro de EE. UU. (verano, UTC-5).
     # En invierno (desde el 1 de noviembre) todo sale una hora antes en hora local.
     - cron: "7 13 * * *"
     - cron: "7 17 * * *"
