@@ -16,6 +16,12 @@ def main():
     if not pend:
         sys.exit("No queda ningún carrusel pendiente: hay que añadir el lote siguiente.")
     c = pend[0]
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    hoy = datetime.now(ZoneInfo("America/Chicago")).strftime("%Y-%m-%d")
+    if c.get("no_antes") and hoy < c["no_antes"]:
+        print(f"{c['id']} no se publica antes del {c['no_antes']} (hoy es {hoy} en Chicago). Nada que hacer.")
+        return
     urls = [f"{base_url()}/{s}" for s in c["slides"]]
     print(f"Siguiente: {c['id']} – {c['titulo']} ({len(pend)} pendientes)")
     malas = [u for u in urls if not accesible(u)]
