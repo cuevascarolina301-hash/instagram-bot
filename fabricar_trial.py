@@ -12,7 +12,7 @@ from PIL import Image, ImageFilter, ImageEnhance
 from comun import RAIZ, escribir, leer
 
 W, H, Y0 = 1080, 1920, 380          # la slide ocupa y 380 → 1460
-SEG, SEG_GOLPE, FADE = 2.6, 3.2, 0.35
+SEG, SEG_GOLPE, FADE = 2.6, 3.2, 0.35   # valores por defecto si el carrusel no trae «duraciones»
 FIN = "carruseles/c02/10.jpg"       # slide del libro con «Comenta LIBRO» (común a todos)
 
 
@@ -44,7 +44,8 @@ def video(slides, duraciones, musica, salida, tmp):
 def main():
     datos = leer("carruseles/carruseles.json")
     cola = leer("trial/trial_cola.json", [])
-    hechos = {t["id"] for t in cola}
+    publicados = {t["id"] for t in cola if t.get("publicado")}
+    cola = [t for t in cola if t.get("publicado")]      # los pendientes se rehacen (por si cambian las duraciones)
     pistas = sorted(p for e in ("mp3", "m4a", "wav") for p in glob.glob(os.path.join(RAIZ, "musica", f"*.{e}")))
     if not pistas:
         raise SystemExit("No hay música en musica/.")
@@ -54,13 +55,15 @@ def main():
         base = [os.path.join(RAIZ, s) for s in c["slides"][:9]]
         fin = os.path.join(RAIZ, FIN)
         g = c["slide_golpe"] - 1
+        dur = c.get("duraciones") or [SEG_GOLPE] + [SEG] * 8 + [SEG_GOLPE]
+        orden_b = [g] + [i for i in range(9) if i != g]
         variantes = {
-            "A": (base + [fin], [SEG_GOLPE] + [SEG] * 8 + [SEG_GOLPE]),
-            "B": ([base[g]] + [s for i, s in enumerate(base) if i != g] + [fin], [SEG_GOLPE] + [SEG] * 8 + [SEG_GOLPE]),
+            "A": (base + [fin], dur[:9] + [dur[9]]),
+            "B": ([base[i] for i in orden_b] + [fin], [dur[i] for i in orden_b] + [dur[9]]),
         }
         for v, (slides, durs) in variantes.items():
             tid = f"{c['id']}_{v}"
-            if tid in hechos:
+            if tid in publicados:
                 continue
             salida = os.path.join(RAIZ, "trial", f"{tid}.mp4")
             video(slides, durs, pistas[k % len(pistas)], salida, os.path.join(RAIZ, "trial", "tmp"))

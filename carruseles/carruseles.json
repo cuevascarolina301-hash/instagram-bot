@@ -22,7 +22,19 @@
       "tema": "Creencia",
       "gancho": "Curiosidad",
       "slide_golpe": 8,
-      "media_id": null
+      "media_id": null,
+      "duraciones": [
+        8.1,
+        8.7,
+        8.1,
+        7.2,
+        8.7,
+        8.1,
+        10.0,
+        5.1,
+        8.1,
+        7.5
+      ]
     },
     {
       "id": "c02",
@@ -46,7 +58,19 @@
       "gancho": "Identificación",
       "slide_golpe": 8,
       "media_id": null,
-      "no_antes": "2026-10-15"
+      "no_antes": "2026-10-15",
+      "duraciones": [
+        9.6,
+        7.8,
+        8.4,
+        8.1,
+        8.7,
+        4.5,
+        10.0,
+        9.9,
+        4.8,
+        7.5
+      ]
     },
     {
       "id": "c03",
@@ -69,7 +93,19 @@
       "tema": "Problema",
       "gancho": "Identificación",
       "slide_golpe": 4,
-      "media_id": null
+      "media_id": null,
+      "duraciones": [
+        9.3,
+        9.0,
+        4.8,
+        4.8,
+        8.1,
+        10.0,
+        6.3,
+        10.0,
+        8.1,
+        7.5
+      ]
     },
     {
       "id": "c04",
@@ -92,7 +128,19 @@
       "tema": "Problema",
       "gancho": "Identificación",
       "slide_golpe": 2,
-      "media_id": null
+      "media_id": null,
+      "duraciones": [
+        9.9,
+        3.6,
+        6.9,
+        10.0,
+        9.9,
+        8.7,
+        3.5,
+        8.1,
+        8.7,
+        7.5
+      ]
     },
     {
       "id": "c05",
@@ -115,7 +163,19 @@
       "tema": "Creencia",
       "gancho": "Curiosidad",
       "slide_golpe": 8,
-      "media_id": null
+      "media_id": null,
+      "duraciones": [
+        6.6,
+        8.1,
+        4.2,
+        7.2,
+        8.7,
+        5.7,
+        8.4,
+        6.6,
+        9.3,
+        7.5
+      ]
     },
     {
       "id": "c06",
@@ -138,7 +198,19 @@
       "tema": "Creencia",
       "gancho": "Identificación",
       "slide_golpe": 4,
-      "media_id": null
+      "media_id": null,
+      "duraciones": [
+        6.3,
+        6.9,
+        7.2,
+        6.9,
+        7.2,
+        6.9,
+        10.0,
+        10.0,
+        8.4,
+        7.5
+      ]
     },
     {
       "id": "c07",
@@ -161,7 +233,19 @@
       "tema": "Resultado",
       "gancho": "Pregunta",
       "slide_golpe": 3,
-      "media_id": null
+      "media_id": null,
+      "duraciones": [
+        8.1,
+        5.1,
+        6.6,
+        10.0,
+        4.8,
+        9.3,
+        8.7,
+        8.7,
+        9.0,
+        7.5
+      ]
     },
     {
       "id": "c08",
@@ -184,7 +268,19 @@
       "tema": "Creencia",
       "gancho": "Curiosidad",
       "slide_golpe": 5,
-      "media_id": null
+      "media_id": null,
+      "duraciones": [
+        3.9,
+        6.0,
+        8.4,
+        4.8,
+        5.7,
+        7.5,
+        5.4,
+        9.9,
+        7.2,
+        7.5
+      ]
     },
     {
       "id": "c09",
@@ -207,7 +303,19 @@
       "tema": "Creencia",
       "gancho": "Identificación",
       "slide_golpe": 8,
-      "media_id": null
+      "media_id": null,
+      "duraciones": [
+        7.2,
+        6.0,
+        10.0,
+        7.5,
+        6.0,
+        6.3,
+        10.0,
+        7.2,
+        7.2,
+        7.5
+      ]
     },
     {
       "id": "c10",
@@ -230,7 +338,19 @@
       "tema": "Pregunta",
       "gancho": "Pregunta",
       "slide_golpe": 7,
-      "media_id": null
+      "media_id": null,
+      "duraciones": [
+        7.2,
+        10.0,
+        4.8,
+        8.7,
+        7.2,
+        10.0,
+        9.6,
+        9.3,
+        8.7,
+        7.5
+      ]
     }
   ],
   "nota": "tema/gancho = clasificación TOFU (Problema, Creencia, Pregunta, Resultado, Tendencia). slide_golpe = slide que abre la variante B del Trial Reel."
