@@ -1,0 +1,35 @@
+name: Responder LIBRO (ensayo)
+
+# ENSAYO: lánzalo a mano después de comentar «LIBRO» desde otra cuenta en un post.
+# Si el resultado es «✔ enviado», se puede activar la revisión automática quitando los # de las 2 líneas de schedule.
+on:
+  # schedule:
+  #   - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: escritura-repo
+  cancel-in-progress: false
+
+jobs:
+  responder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Buscar comentarios «LIBRO» y responder
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+        run: python3 responder_libro.py
+      - name: Guardar el estado
+        if: always()
+        run: |
+          git config user.name "bot-publicador"
+          git config user.email "bot@users.noreply.github.com"
+          git add respuestas || true
+          git diff --cached --quiet && exit 0
+          git commit -m "Respuestas LIBRO: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase
+          git push

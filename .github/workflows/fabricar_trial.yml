@@ -1,0 +1,36 @@
+name: Fabricar Trial Reels
+
+# Se lanza solo al subir carruseles nuevos (o a mano desde la pestaña Actions). Unos 5-10 minutos.
+on:
+  push:
+    paths:
+      - "carruseles/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: escritura-repo
+  cancel-in-progress: false
+
+jobs:
+  fabricar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar ffmpeg y Pillow
+        run: |
+          which ffmpeg || (sudo apt-get update && sudo apt-get install -y ffmpeg)
+          pip install pillow
+      - name: Fabricar los vídeos
+        run: python3 fabricar_trial.py
+      - name: Guardar los vídeos
+        run: |
+          git config user.name "bot-publicador"
+          git config user.email "bot@users.noreply.github.com"
+          git add trial
+          git diff --cached --quiet && exit 0
+          git commit -m "Trial Reels fabricados"
+          git pull --rebase
+          git push

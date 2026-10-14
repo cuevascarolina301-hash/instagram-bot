@@ -1,0 +1,67 @@
+name: Publicar carrusel
+
+on:
+  schedule:
+    # 1 carrusel al día a las 20:37 hora de Chicago (dos horas UTC: verano / invierno)
+    - cron: "37 1 * * *"
+    - cron: "37 2 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Prueba sin publicar (1 = sí, 0 = publicar de verdad)"
+        default: "1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: escritura-repo
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ¿Toca publicar?
+        id: toca
+        env:
+          CRON: ${{ github.event.schedule }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from datetime import datetime, timedelta, timezone
+          from zoneinfo import ZoneInfo
+          cron = os.environ.get("CRON", "").strip()
+          if not cron:
+              ok = True
+          else:
+              m, h = int(cron.split()[0]), int(cron.split()[1])
+              now = datetime.now(timezone.utc); d = now.date()
+              if now.hour < h:
+                  d -= timedelta(days=1)
+              prevista = datetime(d.year, d.month, d.day, h, m, tzinfo=timezone.utc)
+              local = prevista.astimezone(ZoneInfo("America/Chicago"))
+              ok = local.hour in (20,)
+              print(f"Prevista {prevista:%H:%M} UTC = {local:%H:%M} en Chicago -> {'publicar' if ok else 'no toca'}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"ok={'true' if ok else 'false'}\n")
+          PY
+
+      - uses: actions/checkout@v4
+        if: steps.toca.outputs.ok == 'true'
+      - name: Publicar el siguiente carrusel
+        if: steps.toca.outputs.ok == 'true'
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || '0' }}
+        run: python3 publicar_carrusel.py
+      - name: Guardar el estado
+        if: steps.toca.outputs.ok == 'true' && (github.event.inputs.dry_run || '0') != '1'
+        run: |
+          git config user.name "bot-publicador"
+          git config user.email "bot@users.noreply.github.com"
+          git add carruseles/carruseles.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Carrusel publicado: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase
+          git push
