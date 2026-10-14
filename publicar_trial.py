@@ -1,4 +1,6 @@
-"""Publica el siguiente Trial Reel (solo lo ven personas que no te siguen).
+"""Publica el siguiente Reel-versión de carrusel, en orden A1, B1, A2, B2…
+
+TRIAL=1 : como Trial Reel (solo a partir de 1 000 seguidores). Si no, Reel normal.
 
 Instagram lo enseña después a tus seguidoras si funciona bien (graduation_strategy = SS_PERFORMANCE).
 Orden: A y B del mismo carrusel salen el mismo día (mañana y tarde) para compararlas en igualdad.
@@ -25,13 +27,18 @@ def main():
         return
     token = os.environ["IG_TOKEN"]
     ig_id, usuario = yo(token)
+    extra = {}
+    if os.environ.get("TRIAL") == "1":      # solo a partir de 1 000 seguidores
+        extra["trial_params"] = json.dumps({"graduation_strategy": "SS_PERFORMANCE"})
+    else:
+        extra["share_to_feed"] = "true"
     cont = llamar("POST", f"{ig_id}/media", media_type="REELS", video_url=url, caption=t["caption"],
-                  trial_params=json.dumps({"graduation_strategy": "SS_PERFORMANCE"}), access_token=token)
+                  access_token=token, **extra)
     esperar(cont["id"], token)
     pub = llamar("POST", f"{ig_id}/media_publish", creation_id=cont["id"], access_token=token)
     t["publicado"], t["media_id"] = ahora(), pub["id"]
     escribir("trial/trial_cola.json", cola)
-    print(f"Trial Reel publicado en @{usuario}: {pub['id']}")
+    print(f"Reel {t['id']} publicado en @{usuario}: {pub['id']}")
 
 
 if __name__ == "__main__":

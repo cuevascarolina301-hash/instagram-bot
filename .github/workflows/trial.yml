@@ -1,12 +1,11 @@
-name: Publicar Trial Reel
+name: Publicar Reel carrusel
 
 on:
   schedule:
-    # 2 Trial Reels al día (variante A y B del mismo carrusel): 10:37 y 14:37 hora de Chicago
-    - cron: "37 15 * * *"
-    - cron: "37 16 * * *"
-    - cron: "37 19 * * *"
-    - cron: "37 20 * * *"
+    # 1 Reel-versión de carrusel al día a las 12:07 hora de Chicago, en orden A1, B1, A2, B2…
+    # (sustituye al Reel-frase de las 12:07). Para pasar a Trial Reels con 1 000 seguidores: TRIAL: "1".
+    - cron: "7 17 * * *"
+    - cron: "7 18 * * *"
   workflow_dispatch:
     inputs:
       dry_run:
@@ -43,7 +42,7 @@ jobs:
                   d -= timedelta(days=1)
               prevista = datetime(d.year, d.month, d.day, h, m, tzinfo=timezone.utc)
               local = prevista.astimezone(ZoneInfo("America/Chicago"))
-              ok = local.hour in (10, 14,)
+              ok = local.hour in (12,)
               print(f"Prevista {prevista:%H:%M} UTC = {local:%H:%M} en Chicago -> {'publicar' if ok else 'no toca'}")
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
               f.write(f"ok={'true' if ok else 'false'}\n")
@@ -56,6 +55,7 @@ jobs:
         env:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           DRY_RUN: ${{ github.event.inputs.dry_run || '0' }}
+          TRIAL: "0"
         run: python3 publicar_trial.py
       - name: Guardar el estado
         if: steps.toca.outputs.ok == 'true' && (github.event.inputs.dry_run || '0') != '1'
@@ -64,6 +64,6 @@ jobs:
           git config user.email "bot@users.noreply.github.com"
           git add trial/trial_cola.json
           git diff --cached --quiet && exit 0
-          git commit -m "Trial Reel publicado: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git commit -m "Reel carrusel publicado: $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase
           git push

@@ -2,14 +2,12 @@ name: Publicar en Instagram
 
 on:
   schedule:
-    # 3 Reels al día: 8:07, 12:07 y 16:07 (las 19:07 las sustituye el carrusel de las 20:37) hora del Centro de EE. UU. (Chicago, Texas).
+    # 2 Reels-frase al día: 8:07 y 16:07 (12:07 = Reel-versión de carrusel, 20:37 = carrusel) hora del Centro de EE. UU. (Chicago, Texas).
     # Hay dos horas UTC por cada publicación (una para el horario de verano y otra para el de invierno):
     # el paso «¿Toca publicar?» deja pasar solo la buena. Así el cambio de hora del 1 de noviembre
     # no mueve nada.
     - cron: "7 13 * * *"   # 8:07 verano
     - cron: "7 14 * * *"   # 8:07 invierno
-    - cron: "7 17 * * *"   # 12:07 verano
-    - cron: "7 18 * * *"   # 12:07 invierno
     - cron: "7 21 * * *"   # 16:07 verano
     - cron: "7 22 * * *"   # 16:07 invierno
   workflow_dispatch:
@@ -49,7 +47,7 @@ jobs:
                   d -= timedelta(days=1)
               prevista = datetime(d.year, d.month, d.day, h, 7, tzinfo=timezone.utc)
               local = prevista.astimezone(ZoneInfo("America/Chicago"))
-              ok = local.hour in (8, 12, 16)
+              ok = local.hour in (8, 16)
               print(f"Prevista {prevista:%Y-%m-%d %H:%M} UTC = {local:%H:%M} en Chicago -> {'publicar' if ok else 'no toca'}")
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
               f.write(f"ok={'true' if ok else 'false'}\n")
