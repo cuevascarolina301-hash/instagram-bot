@@ -1,0 +1,95 @@
+name: Publicar en YouTube Shorts
+
+on:
+  schedule:
+    # 2 Shorts al día: 12:37 y 19:37 hora de Chicago. Dos horas UTC por publicación (verano / invierno):
+    # el paso «¿Toca publicar?» deja pasar solo la buena, así el cambio de hora no mueve nada.
+    - cron: "37 17 * * *"   # 12:37 verano
+    - cron: "37 18 * * *"   # 12:37 invierno
+    - cron: "37 0 * * *"    # 19:37 verano
+    - cron: "37 1 * * *"    # 19:37 invierno
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "Qué hacer"
+        type: choice
+        default: prueba_sin_publicar
+        options:
+          - prueba_sin_publicar
+          - publicar
+          - probar_musica
+          - validar_musica
+      reclamadas:
+        description: "Solo para validar_musica: números de las músicas con reclamación (ej. 2,5) o «ninguna»"
+        default: "ninguna"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: escritura-repo
+  cancel-in-progress: false
+
+jobs:
+  youtube:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ¿Toca publicar?
+        id: toca
+        env:
+          CRON: ${{ github.event.schedule }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from datetime import datetime, timedelta, timezone
+          from zoneinfo import ZoneInfo
+          cron = os.environ.get("CRON", "").strip()
+          if not cron:                      # lanzado a mano
+              ok = True
+          else:
+              h = int(cron.split()[1])      # hora UTC prevista
+              now = datetime.now(timezone.utc)
+              d = now.date()
+              if now.hour < h:              # la ejecución salió con retraso y pasó la medianoche
+                  d -= timedelta(days=1)
+              prevista = datetime(d.year, d.month, d.day, h, 37, tzinfo=timezone.utc)
+              local = prevista.astimezone(ZoneInfo("America/Chicago"))
+              ok = local.hour in (12, 19)
+              print(f"Prevista {prevista:%Y-%m-%d %H:%M} UTC = {local:%H:%M} en Chicago -> {'publicar' if ok else 'no toca'}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"ok={'true' if ok else 'false'}\n")
+          PY
+
+      - uses: actions/checkout@v4
+        if: steps.toca.outputs.ok == 'true'
+
+      - name: Publicar el siguiente Short
+        if: steps.toca.outputs.ok == 'true' && (github.event_name == 'schedule' || inputs.modo == 'publicar' || inputs.modo == 'prueba_sin_publicar')
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          DRY_RUN: ${{ inputs.modo == 'prueba_sin_publicar' && '1' || '0' }}
+        run: python3 publicar_youtube.py
+
+      - name: Músicas (prueba o validación)
+        if: inputs.modo == 'probar_musica' || inputs.modo == 'validar_musica'
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          MODO: ${{ inputs.modo == 'probar_musica' && 'probar' || 'validar' }}
+          RECLAMADAS: ${{ inputs.reclamadas }}
+        run: python3 musica_youtube.py
+
+      - name: Guardar el estado
+        if: always() && steps.toca.outputs.ok == 'true' && inputs.modo != 'prueba_sin_publicar'
+        run: |
+          git config user.name "bot-publicador"
+          git config user.email "bot@users.noreply.github.com"
+          for f in youtube_estado.json youtube_musica.json; do [ -f "$f" ] && git add "$f"; done
+          git diff --cached --quiet && exit 0
+          git commit -m "YouTube: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase
+          git push
