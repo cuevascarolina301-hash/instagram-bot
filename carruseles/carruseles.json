@@ -351,6 +351,146 @@
         8.7,
         7.5
       ]
+    },
+    {
+      "id": "c11",
+      "titulo": "No eres lo que piensas (formato burbujas de pensamiento)",
+      "slides": [
+        "carruseles/c11/01.jpg",
+        "carruseles/c11/02.jpg",
+        "carruseles/c11/03.jpg",
+        "carruseles/c11/04.jpg",
+        "carruseles/c11/05.jpg",
+        "carruseles/c11/06.jpg",
+        "carruseles/c11/07.jpg",
+        "carruseles/c11/08.jpg",
+        "carruseles/c11/09.jpg",
+        "carruseles/c11/10.jpg"
+      ],
+      "caption": "¿Crecimiento o reparación? Ese pensamiento que te repites: ¿lo has revisado alguna vez, o lo diste por cierto hace años?\n\nComenta LIBRO 📖 y te mando el enlace.\n\n#amorpropio #mujeres #desarrollopersonal #crecimientopersonal #librosenespañol",
+      "estado": "pendiente",
+      "publicado": false,
+      "tema": "Creencia",
+      "gancho": "Curiosidad",
+      "slide_golpe": 8,
+      "media_id": null,
+      "duraciones": [
+        7.8,
+        10,
+        7.8,
+        7.2,
+        6.3,
+        8.1,
+        9.6,
+        6.3,
+        9.6,
+        7.2
+      ]
+    },
+    {
+      "id": "c12",
+      "titulo": "El pensamiento no es una orden (formato frase reescrita)",
+      "slides": [
+        "carruseles/c12/01.jpg",
+        "carruseles/c12/02.jpg",
+        "carruseles/c12/03.jpg",
+        "carruseles/c12/04.jpg",
+        "carruseles/c12/05.jpg",
+        "carruseles/c12/06.jpg",
+        "carruseles/c12/07.jpg",
+        "carruseles/c12/08.jpg",
+        "carruseles/c12/09.jpg",
+        "carruseles/c12/10.jpg"
+      ],
+      "caption": "¿Crecimiento o reparación? Tu último «tengo que»: si lo cambias por «he decidido que», ¿sigue en pie?\n\nComenta LIBRO 📖 y te mando el enlace.\n\n#amorpropio #mujeres #desarrollopersonal #crecimientopersonal #librosenespañol",
+      "estado": "pendiente",
+      "publicado": false,
+      "tema": "Creencia",
+      "gancho": "Identificación",
+      "slide_golpe": 5,
+      "media_id": null,
+      "duraciones": [
+        6.0,
+        8.4,
+        8.7,
+        8.4,
+        10,
+        9.9,
+        7.2,
+        9.9,
+        6.6,
+        7.2
+      ]
+    },
+    {
+      "id": "c13",
+      "titulo": "Mirar el pensamiento, no desde él (formato pregunta cambiada)",
+      "slides": [
+        "carruseles/c13/01.jpg",
+        "carruseles/c13/02.jpg",
+        "carruseles/c13/03.jpg",
+        "carruseles/c13/04.jpg",
+        "carruseles/c13/05.jpg",
+        "carruseles/c13/06.jpg",
+        "carruseles/c13/07.jpg",
+        "carruseles/c13/08.jpg",
+        "carruseles/c13/09.jpg",
+        "carruseles/c13/10.jpg"
+      ],
+      "caption": "¿Crecimiento o reparación? Lo que piensas hoy de ti: ¿lo estás mirando, o estás mirando desde ahí?\n\nComenta LIBRO 📖 y te mando el enlace.\n\n#amorpropio #mujeres #desarrollopersonal #crecimientopersonal #librosenespañol",
+      "estado": "pendiente",
+      "publicado": false,
+      "tema": "Creencia",
+      "gancho": "Curiosidad",
+      "slide_golpe": 4,
+      "media_id": null,
+      "duraciones": [
+        8.4,
+        7.8,
+        10,
+        8.4,
+        10,
+        6.0,
+        10,
+        7.2,
+        7.2,
+        7.2
+      ]
+    },
+    {
+      "id": "c14",
+      "titulo": "Estoy teniendo el pensamiento de que… (formato ejercicio)",
+      "slides": [
+        "carruseles/c14/01.jpg",
+        "carruseles/c14/02.jpg",
+        "carruseles/c14/03.jpg",
+        "carruseles/c14/04.jpg",
+        "carruseles/c14/05.jpg",
+        "carruseles/c14/06.jpg",
+        "carruseles/c14/07.jpg",
+        "carruseles/c14/08.jpg",
+        "carruseles/c14/09.jpg",
+        "carruseles/c14/10.jpg"
+      ],
+      "caption": "¿Crecimiento o reparación? Prueba con el pensamiento que más se repite: ¿cambia algo al ponerle el marco?\n\nComenta LIBRO 📖 y te mando el enlace.\n\n#amorpropio #mujeres #desarrollopersonal #crecimientopersonal #librosenespañol",
+      "estado": "pendiente",
+      "publicado": false,
+      "tema": "Resultado",
+      "gancho": "Curiosidad",
+      "slide_golpe": 8,
+      "media_id": null,
+      "duraciones": [
+        8.4,
+        10,
+        10,
+        8.7,
+        4.5,
+        10,
+        9.0,
+        9.9,
+        6.3,
+        7.2
+      ]
     }
   ],
   "nota": "tema/gancho = clasificación TOFU (Problema, Creencia, Pregunta, Resultado, Tendencia). slide_golpe = slide que abre la variante B del Trial Reel."
