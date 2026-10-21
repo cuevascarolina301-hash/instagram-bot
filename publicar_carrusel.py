@@ -35,7 +35,7 @@ def main():
     token = os.environ["IG_TOKEN"]
     ig_id, usuario = yo(token)
     # anti-duplicado
-    for m in llamar("GET", f"{ig_id}/media", fields="id,caption", limit=5, access_token=token).get("data", []):
+    for m in llamar("GET", f"{ig_id}/media", fields="id,caption", limit=50, access_token=token).get("data", []):
         if (m.get("caption") or "").strip() == c["caption"].strip():
             print("Ya estaba publicado (anti-duplicado).")
             c["publicado"], c["media_id"] = ahora(), m["id"]
